@@ -3,11 +3,13 @@ const {
   revalidateClaim,
   submitClaim,
   getClaimWithErrors,
+  listClaims,
 } = require('./claims.service');
 
 async function create(req, res, next) {
   try {
     const { claim, errors } = await createClaim(req.body);
+    res.locals.claimId = claim._id;
     res.status(201).json({ claim, errors });
   } catch (err) {
     next(err);
@@ -42,4 +44,14 @@ async function get(req, res, next) {
   }
 }
 
-module.exports = { create, revalidate, submit, get };
+async function list(req, res, next) {
+  try {
+    const { status, patientId, page, limit } = req.query;
+    const result = await listClaims({ status, patientId, page, limit });
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { create, revalidate, submit, get, list };

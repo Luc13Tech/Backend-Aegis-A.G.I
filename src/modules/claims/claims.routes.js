@@ -1,10 +1,11 @@
 const express = require('express');
 const { auth } = require('../../middleware/auth');
 const auditLogger = require('../../middleware/auditLogger');
-const { create, revalidate, submit, get } = require('./claims.controller');
+const { create, revalidate, submit, get, list } = require('./claims.controller');
 
 const router = express.Router();
 
+router.get('/', auth, list);
 router.post(
   '/',
   auth,

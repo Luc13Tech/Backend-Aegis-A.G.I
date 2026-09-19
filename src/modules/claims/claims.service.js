@@ -68,4 +68,24 @@ async function getClaimWithErrors(claimId) {
   return { claim, errors };
 }
 
-module.exports = { createClaim, revalidateClaim, submitClaim, getClaimWithErrors };
+async function listClaims({ status, patientId, page = 1, limit = 20 } = {}) {
+  const filter = {};
+  if (status) filter.status = status;
+  if (patientId) filter.patient = patientId;
+
+  const skip = (Number(page) - 1) * Number(limit);
+  const [items, total] = await Promise.all([
+    Claim.find(filter).sort({ createdAt: -1 }).skip(skip).limit(Number(limit)),
+    Claim.countDocuments(filter),
+  ]);
+
+  return { items, total, page: Number(page), limit: Number(limit) };
+}
+
+module.exports = {
+  createClaim,
+  revalidateClaim,
+  submitClaim,
+  getClaimWithErrors,
+  listClaims,
+};
