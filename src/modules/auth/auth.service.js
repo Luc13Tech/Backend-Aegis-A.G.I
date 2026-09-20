@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../../models/User');
 
 async function loginUser(email, password) {
-  const user = await User.findOne({ email: email.toLowerCase() }).select('+passwordHash');
+  const user = await User.findOne({ email: email.trim().toLowerCase() }).select('+passwordHash');
   if (!user || !user.active) {
     const err = new Error('Identifiants invalides');
     err.status = 401;

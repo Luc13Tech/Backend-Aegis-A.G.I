@@ -30,9 +30,9 @@ function formPage({ error } = {}) {
       <label>Nom complet</label>
       <input name="name" required />
       <label>Email</label>
-      <input name="email" type="email" required />
+      <input name="email" type="email" autocapitalize="none" autocorrect="off" spellcheck="false" required />
       <label>Mot de passe</label>
-      <input name="password" type="password" required minlength="8" />
+      <input name="password" type="password" autocapitalize="none" autocorrect="off" spellcheck="false" required minlength="8" />
       <button type="submit">Créer le compte admin</button>
     </form>
   </div>
@@ -78,7 +78,7 @@ async function createFirstAdmin(req, res, next) {
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
-    await User.create({ name, email: email.toLowerCase(), passwordHash, role: 'admin' });
+    await User.create({ name, email: email.trim().toLowerCase(), passwordHash, role: 'admin' });
 
     res.send(successPage(email));
   } catch (err) {
